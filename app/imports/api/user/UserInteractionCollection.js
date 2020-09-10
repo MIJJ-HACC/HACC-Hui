@@ -4,7 +4,7 @@ import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
 export const userInteractionTypes = {
-  deleteAccount: 'deleteAccount',
+  deletedAccount: 'deletedAccount',
   developerChangedSkills: 'changedSkills',
   developerChangedTools: 'changedTools',
 };
