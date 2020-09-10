@@ -1,9 +1,8 @@
 import React from 'react';
 import { Grid, Button } from 'semantic-ui-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, HashRouter as Redirect } from 'react-router-dom';
 import { Developers } from '../../api/user/DeveloperCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
-import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
 /**
  * A simple page to agree to the terms.
@@ -20,7 +19,7 @@ class Participation extends React.Component {
       id: _id,
       isCompliant: true,
     };
-    updateMethod.call({collectionName: Developers.getCollectionName() , updateData: updateData});
+    updateMethod.call({ collectionName: Developers.getCollectionName(), updateData: updateData });
   }
 
   render() {

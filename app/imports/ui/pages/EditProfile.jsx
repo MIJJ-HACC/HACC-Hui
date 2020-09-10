@@ -1,23 +1,26 @@
 import React from 'react';
 import _ from 'lodash';
-import { Grid, Image, Icon, Segment, Button, List, Loader } from 'semantic-ui-react';
+import { Grid, Segment, Loader } from 'semantic-ui-react';
 import swal from 'sweetalert';
-import { AutoForm, ErrorsField, NumField, SelectField, SubmitField, TextField, LongTextField, BoolField } from 'uniforms-semantic';
+import { AutoForm, ErrorsField, SelectField, SubmitField,
+  TextField, LongTextField, BoolField } from 'uniforms-semantic';
 import { SimpleSchema2Bridge } from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
-import { demographicLevels } from '../../api/level/Levels';
-import MultiSelectField from '../components/form-fields/MultiSelectField';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Link } from 'react-router-dom';
-
+import { demographicLevels } from '../../api/level/Levels';
+import MultiSelectField from '../components/form-fields/MultiSelectField';
 import { Developers } from '../../api/user/DeveloperCollection';
+import { Challenges } from '../../api/challenge/ChallengeCollection';
 import { Skills } from '../../api/skill/SkillCollection';
 import { Tools } from '../../api/tool/ToolCollection';
-import { Challenges } from '../../api/challenge/ChallengeCollection';
+import { DeveloperTools } from '../../api/user/DeveloperToolCollection';
+import { DeveloperSkills } from '../../api/user/DeveloperSkillCollection';
+import { DeveloperChallenges } from '../../api/user/DeveloperChallengeCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 
-/** added challenges, skills, tools fields to the Developers schema **/
+// added challenges, skills, tools fields to the Developers schema
 const schema = new SimpleSchema({
   username: { type: String },
   slugID: { type: String },
@@ -32,12 +35,12 @@ const schema = new SimpleSchema({
   lookingForTeam: { type: Boolean, optional: true },
   isCompliant: { type: Boolean, optional: true },
   challenges: { type: Array, optional: true },
-    'challenges.$': { type: String },
+  'challenges.$': { type: String },
   skills: { type: Array, optional: true },
-    'skills.$': { type: String },
+  'skills.$': { type: String },
   tools: { type: Array, optional: true },
-    'tools.$': { type: String },
-})
+  'tools.$': { type: String },
+});
 
 /**
  * A simple edit page thats prefilled with any info about the developer.
@@ -54,32 +57,38 @@ class EditProfile extends React.Component {
       skills, tools, linkedIn, gitHub, website, aboutMe, isCompliant, _id } = data;
 
     const challengesList = this.props.challenges;
-    let challengeIds = [];
+    const challengeIds = [];
     const skillsList = this.props.skills;
-    let skillIds = [];
+    const skillIds = [];
     const toolsList = this.props.tools;
-    let toolIds = [];
+    const toolIds = [];
 
-    for (let i = 0; i < challengesList.length; i++) {
-      for (let j = 0; j < challenges.length; j++) {
-        if (challengesList[i].title === challenges[j]) {
-          challengeIds.push(challengesList[i].slugID);
+    if (challenges) {
+      for (let i = 0; i < challengesList.length; i++) {
+        for (let j = 0; j < challenges.length; j++) {
+          if (challengesList[i].title === challenges[j]) {
+            challengeIds.push(challengesList[i].slugID);
+          }
         }
       }
     }
 
-    for (let i = 0; i < skillsList.length; i++) {
-      for (let j = 0; j < skills.length; j++) {
-        if (skillsList[i].name === skills[j]) {
-          skillIds.push(skillsList[i].slugID);
+    if (skills) {
+      for (let i = 0; i < skillsList.length; i++) {
+        for (let j = 0; j < skills.length; j++) {
+          if (skillsList[i].name === skills[j]) {
+            skillIds.push(skillsList[i].slugID);
+          }
         }
       }
     }
 
-    for (let i = 0; i < toolsList.length; i++) {
-      for (let j = 0; j < tools.length; j++) {
-        if (toolsList[i].name === tools[j]) {
-          toolIds.push(toolsList[i].slugID);
+    if (tools) {
+      for (let i = 0; i < toolsList.length; i++) {
+        for (let j = 0; j < tools.length; j++) {
+          if (toolsList[i].name === tools[j]) {
+            toolIds.push(toolsList[i].slugID);
+          }
         }
       }
     }
@@ -99,9 +108,9 @@ class EditProfile extends React.Component {
       website,
       aboutMe,
     };
-    updateMethod.call({collectionName: Developers.getCollectionName() , updateData: updateData}, (error) => (error ?
-      swal('Error', error.message, 'error') :
-      swal('Success', 'Item updated successfully', 'success')));
+    updateMethod.call({ collectionName: Developers.getCollectionName(), updateData: updateData }, (error) => (error ?
+        swal('Error', error.message, 'error') :
+        swal('Success', 'Item updated successfully', 'success')));
   }
 
   /** If the subscription(s) have been received, render the page, otherwise show a loading icon. */
@@ -112,42 +121,64 @@ class EditProfile extends React.Component {
   /** Render the page once subscriptions have been received. */
   renderPage() {
     const formSchema = new SimpleSchema2Bridge(schema);
-    const dev = Developers.findOne();
-    dev.testtest = 'test';
-    console.log(dev);
-
     const challengeList = _.map(this.props.challenges, 'title');
     const skillList = _.map(this.props.skills, 'name');
     const toolList = _.map(this.props.tools, 'name');
+    const dev = Developers.findOne();
+    const devChal = [];
+    const devSkill = [];
+    const devTool = [];
+    // add the developers challenges, skills, tools in the edit form
+    _.forEach(this.props.devChallenges, (c) =>
+        _.forEach(this.props.challenges, (p) => {
+          (c.challengeID === p._id) ? devChal.push(p.title) : ''
+        }));
+
+    _.forEach(this.props.devSkills, (c) =>
+        _.forEach(this.props.skills, (p) => {
+          (c.skillID === p._id) ? devSkill.push(p.name) : ''
+        }));
+
+    _.forEach(this.props.devTools, (c) =>
+        _.forEach(this.props.tools, (p) => {
+          (c.toolID === p._id) ? devTool.push(p.name) : ''
+        }));
+
+    dev.tools = devTool;
+    dev.skills = devSkill;
+    dev.challenges = devChal;
 
     return (
         <Grid stackable={true} textAlign='center' container>
 
           <Grid.Row columns={1}>
             <Grid.Column>
-              <h1>Edit Your Profile</h1>  
+              <h1>Edit Your Profile</h1>
             </Grid.Column>
             <Grid.Column floated='right'>
               <Link to='/profile'>Cancel</Link>
             </Grid.Column>
           </Grid.Row>
 
-          <Grid.Row columns={1}>
-            <AutoForm schema={formSchema} onSubmit={data => this.submit(data)} model={dev}>
-              <Segment>
-                <SelectField name='demographicLevel'/>
-                <BoolField name='lookingForTeam'/>
-                <TextField name='linkedIn' placeholder='linkedin url...'/>
-                <TextField name='gitHub' placeholder='github url...'/>
-                <TextField name='website' placeholder='website url...'/>
-                <MultiSelectField name='challenges' allowedValues={challengeList} placeholder='Challenges' />
-                <MultiSelectField name='skills' allowedValues={skillList} placeholder='Skills' />
-                <MultiSelectField name='tools' allowedValues={toolList} placeholder='Tools' />
-                <LongTextField name='aboutMe' placeholder='a short bio about yourself...'/>
-                <SubmitField value='Submit'/>
-                <ErrorsField/>
-              </Segment>
-            </AutoForm>
+          <Grid.Row>
+            <Grid.Column>
+              <AutoForm schema={formSchema} onSubmit={data => this.submit(data)} model={dev}>
+                <Segment>
+                  <SelectField name='demographicLevel'/>
+                  <BoolField name='lookingForTeam'/>
+                  <BoolField name='isCompliant'/>
+                  <TextField name='linkedIn' placeholder='linkedin url...'/>
+                  <TextField name='gitHub' placeholder='github url...'/>
+                  <TextField name='website' placeholder='website url...'/>
+                  <MultiSelectField name='challenges' allowedValues={challengeList} placeholder='Challenges'/>
+                  <MultiSelectField name='skills' allowedValues={skillList} placeholder='Skills'/>
+                  <MultiSelectField name='tools' allowedValues={toolList} placeholder='Tools'/>
+                  <LongTextField name='aboutMe' placeholder='a short bio about yourself...'/>
+                  <SubmitField value='Submit'/>
+                  <ErrorsField/>
+                </Segment>
+              </AutoForm>
+            </Grid.Column>
           </Grid.Row>
 
         </Grid>
@@ -160,22 +191,33 @@ EditProfile.propTypes = {
   skills: PropTypes.array.isRequired,
   developer: PropTypes.array.isRequired,
   challenges: PropTypes.array.isRequired,
+  devTools: PropTypes.array.isRequired,
+  devSkills: PropTypes.array.isRequired,
+  devChallenges: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
 };
 
-//** withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker */
+// withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
 export default withTracker(() => {
   // Get access to documents.
   const toolsSubscription = Tools.subscribe();
   const skillsSubscription = Skills.subscribe();
   const developersSubscription = Developers.subscribe();
   const challengesSubscription = Challenges.subscribe();
+  const devToolsSubscription = DeveloperTools.subscribe();
+  const devSkillsSubscription = DeveloperSkills.subscribe();
+  const devChallengesSubscription = DeveloperChallenges.subscribe();
   return {
     tools: Tools.find({}).fetch(),
     skills: Skills.find({}).fetch(),
     developer: Developers.find({}).fetch(),
     challenges: Challenges.find({}).fetch(),
+    devTools: DeveloperTools.find({}).fetch(),
+    devSkills: DeveloperSkills.find({}).fetch(),
+    devChallenges: DeveloperChallenges.find({}).fetch(),
     ready: toolsSubscription.ready() && skillsSubscription.ready() &&
-      developersSubscription.ready() && challengesSubscription.ready(),
+        developersSubscription.ready() && challengesSubscription.ready() &&
+        devToolsSubscription.ready() && devSkillsSubscription.ready() &&
+        devChallengesSubscription.ready(),
   };
 })(EditProfile);
