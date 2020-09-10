@@ -96,10 +96,10 @@ class CreateTeam extends React.Component {
     }
 
     //cant make it work
-    if (/[^a-z\d]/.test(name) === false) {
+    /*if (/[^a-z\d]/.test(name) === false) {
       swal('Error', 'No special characters, Upper Case Letters, and Space allowed.', 'error');
       return;
-    }
+    }*/
 
     defineMethod.call({
           collectionName: Teams.getCollectionName(),
