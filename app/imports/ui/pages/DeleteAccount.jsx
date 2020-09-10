@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import SimpleSchema from 'simpl-schema';
 import { Grid, Header, Segment, Button, Loader } from 'semantic-ui-react';
@@ -106,7 +105,7 @@ export default withTracker(({ match }) => {
   // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
   const documentId = match.params._id;
   // Get access to Developers documents.
-  const subscription = Meteor.subscribe('Developers');
+  const subscription = Developers.subscribe();
   return {
     doc: Developers.findOne(documentId),
     ready: subscription.ready(),
