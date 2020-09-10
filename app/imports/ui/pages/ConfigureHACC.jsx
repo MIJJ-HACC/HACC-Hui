@@ -1,13 +1,19 @@
 import React from 'react';
 import { Container, Table, Header, Loader, Grid, Image, Button} from 'semantic-ui-react';
 import { withTracker } from 'meteor/react-meteor-data';
-import { withRouter, NavLink } from 'react-router-dom';
+import { Link, withRouter, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Stuffs } from '../../api/stuff/StuffCollection';
-import StuffItemAdmin from '../components/StuffItemAdmin';
+import { Tools } from '../../api/tool/ToolCollection';
+import { Skills } from '../../api/skill/SkillCollection';
+import { Challenges } from '../../api/challenge/ChallengeCollection';
+import ChallengesAdmin from '../components/ChallengesAdmin';
+import SkillsAdmin from '../components/SkillsAdmin';
+import ToolsAdmin from '../components/ToolsAdmin';
 import AddChallenge from '../pages/AddChallenge';
 import AddSkill from '../pages/AddSkill';
 import AddTool from '../pages/AddTool';
+import { removeItMethod } from '../../api/base/BaseCollection.methods';
+import swal from 'sweetalert';
 
 /**
  * **Deprecated**
@@ -27,66 +33,76 @@ class ConfigureHACC extends React.Component {
     return (
         <div>
 		<Header as="h1" textAlign="center">Configure the HACC</Header>
-		<Grid columns={3} divided>
+		<Grid divided>
 		 <Grid.Row>
-		 <Grid.Column>
+		 <Grid.Column width={10}>
           <Header as="h2" textAlign="center">Challenges</Header>
+		  
+		   <Grid>
+            <Grid.Column textAlign="center">
+		       <Button as={NavLink} activeClassName="active" exact to="/addChallenge" key='addChallenge' size='large'>Add Challenge</Button>
+            </Grid.Column>
+           </Grid>
+		  
           <Table celled>
-            <Table.Header>
+		  <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Challenges</Table.HeaderCell>
-                <Table.HeaderCell>Edit</Table.HeaderCell>
+                <Table.HeaderCell>Title</Table.HeaderCell>
+                <Table.HeaderCell>Description</Table.HeaderCell>
+				<Table.HeaderCell>Submission Details</Table.HeaderCell>
+                <Table.HeaderCell>Pitch</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.stuffs.map((stuff) => <StuffItemAdmin key={stuff._id} stuff={stuff} />)}
+				{this.props.challenges.map((challenges => <ChallengesAdmin key={challenges._id} challenges={challenges} />))}
             </Table.Body>
           </Table>
-		  <Grid>
-            <Grid.Column textAlign="center">
-		       <Button as={NavLink} activeClassName="active" exact to="/addChallenge" key='addChallenge' size='large'>Edit Challenges</Button>
-            </Grid.Column>
-           </Grid>
 		  </Grid.Column>
 		  
-		  <Grid.Column>
+		  <Grid.Column width={3}>
 		  <Header as="h2" textAlign="center">Skills</Header>
+		  
+		  <Grid>
+            <Grid.Column textAlign="center">
+		       <Button as={NavLink} activeClassName="active" exact to="/addSkill" key='addSkill' size='large'>Add Skill</Button>
+            </Grid.Column>
+           </Grid>
+		
+		  
           <Table celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Skills</Table.HeaderCell>
-                <Table.HeaderCell>Edit</Table.HeaderCell>
+                <Table.HeaderCell>Description</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.stuffs.map((stuff) => <StuffItemAdmin key={stuff._id} stuff={stuff} />)}
+             {this.props.skills.map((skills => <SkillsAdmin key={skills._id} skills={skills} />))}
             </Table.Body>
           </Table>
+		   </Grid.Column>
+		  
+		  <Grid.Column width={3}>
+		  <Header as="h2" textAlign="center">Tools</Header>
+		  
 		  <Grid>
             <Grid.Column textAlign="center">
-		       <Button as={NavLink} activeClassName="active" exact to="/addSkill" key='addSkill' size='large'>Edit Skills</Button>
+		       <Button as={NavLink} activeClassName="active" exact to="/addTool" key='addTool' size='large'>Add Tool</Button>
             </Grid.Column>
            </Grid>
-		  </Grid.Column>
 		  
-		  <Grid.Column>
-		  <Header as="h2" textAlign="center">Tools</Header>
           <Table celled>
-            <Table.Header>
+		  <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Tools</Table.HeaderCell>
-                <Table.HeaderCell>Edit</Table.HeaderCell>
+                <Table.HeaderCell>Description</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.stuffs.map((stuff) => <StuffItemAdmin key={stuff._id} stuff={stuff} />)}
+			{this.props.tools.map((tools => <ToolsAdmin key={tools._id} tools={tools} />))}
             </Table.Body>
           </Table>
-		  <Grid>
-            <Grid.Column textAlign="center">
-		       <Button as={NavLink} activeClassName="active" exact to="/addTool" key='addTool' size='large'>Edit Tools</Button>
-            </Grid.Column>
-           </Grid>
+		  
 		  </Grid.Column>
 		  
 		  </Grid.Row>
@@ -99,16 +115,22 @@ class ConfigureHACC extends React.Component {
 
 // Require an array of Stuff documents in the props.
 ConfigureHACC.propTypes = {
-  stuffs: PropTypes.array.isRequired,
+  tools: PropTypes.array.isRequired,
+  skills: PropTypes.array.isRequired,
+  challenges: PropTypes.array.isRequired,
   ready: PropTypes.bool.isRequired,
 };
 
 // withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
 export default withTracker(() => {
-  // Get access to Stuff documents.
-  const subscription = Stuffs.subscribeStuffAdmin();
+  const subscription = Challenges.subscribe();
+  const subscription2 = Skills.subscribe();
+  const subscription3 = Tools.subscribe();
   return {
-    stuffs: Stuffs.find({}).fetch(),
-    ready: subscription.ready(),
+    challenges: Challenges.find({}).fetch(),
+    skills: Skills.find({}).fetch(),
+    tools: Tools.find({}).fetch(),
+    ready: subscription.ready() && subscription2.ready() && subscription3.ready(),
   };
 })(ConfigureHACC);
+

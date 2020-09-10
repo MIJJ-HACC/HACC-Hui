@@ -40,11 +40,11 @@ class App extends React.Component {
               <ProtectedRoute path="/add" component={AddStuff}/>
               <ProtectedRoute path="/create" component={CreateTeam}/>
               <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
-			  <AdminProtectedRoute path="/configureHACC" component={ConfigureHACC}/>
-              <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
-			  <AdminProtectedRoute path="/addChallenge" component={AddChallenge}/>
-			  <AdminProtectedRoute path="/addSkill" component={AddSkill}/>
-			  <AdminProtectedRoute path="/addTool" component={AddTool}/>
+			  <ProtectedRoute path="/configureHACC" component={ConfigureHACC}/>
+              <ProtectedRoute path="/admin" component={ListStuffAdmin}/>
+			  <ProtectedRoute path="/addChallenge" component={AddChallenge}/>
+			  <ProtectedRoute path="/addSkill" component={AddSkill}/>
+			  <ProtectedRoute path="/addTool" component={AddTool}/>
               <ProtectedRoute path="/signout" component={Signout}/>
               <ProtectedRoute path="/delete-account" component={DeleteAccount}/>
               <Route component={NotFound}/>
