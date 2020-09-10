@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, Segment, Header, Loader, Button, NavLink } from 'semantic-ui-react';
+import { Grid, Segment, Header, Loader, Button } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, TextField, LongTextField } from 'uniforms-semantic';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { _ } from 'lodash';
+import swal from 'sweetalert';
 import { SimpleSchema2Bridge } from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
 import MultiSelectField from '../controllers/MultiSelectField';
@@ -59,11 +60,17 @@ class CreateTeam extends React.Component {
         }
       }
     }
-    const data = { name, description, gitHubRepo, devPostPage, owner, openBoolean, challenges, skills, tools };
-    console.log(Teams.getCollectionName());
-    console.log(data);
-    defineMethod.call({ collectionName: Teams.getCollectionName(), definitionData: data });
-    this.props.history.push('/');
+    const data = { name, description, gitHubRepo, devPostPage, owner, openBoolean, challengesObject,
+      skillsObject, toolsObject };
+    defineMethod.call({ collectionName: Teams.getCollectionName(), definitionData: data }, (error) => {
+      if (error) {
+        swal('Error', error.message, 'error');
+      } else {
+        swal('Success', 'Team successfully created.', 'success');
+        // eslint-disable-next-line react/prop-types
+        this.props.history.push('/', { some: 'state' });
+      }
+    });
   }
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
@@ -78,7 +85,6 @@ class CreateTeam extends React.Component {
         label: 'Team name',
         type: String,
         regEx: /^[a-z0-9]+$/,
-        unique: true,
       },
       gitHubRepo: {
         label: 'GitHub Repo',
@@ -128,7 +134,7 @@ class CreateTeam extends React.Component {
                   <MultiSelectField name='tools' placeholder={'Tools'}
                                     allowedValues={toolsArray} required/>
                   <LongTextField name='description' placeholder={'About the team'}/>
-                  <Button as={NavLink} exact to={'/'} type='button' onClick={() => {
+                  <Button type='button' onClick={() => {
                     // eslint-disable-next-line no-undef
                     if (window.confirm('Are you sure you wish to create this team?')) {
                       fRef.submit();
