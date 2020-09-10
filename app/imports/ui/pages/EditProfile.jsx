@@ -1,16 +1,46 @@
 import React from 'react';
-import { Grid, Image, Icon, Segment, Button, List } from 'semantic-ui-react';
+import _ from 'lodash';
+import { Grid, Image, Icon, Segment, Button, List, Loader } from 'semantic-ui-react';
 import swal from 'sweetalert';
 import { AutoForm, ErrorsField, NumField, SelectField, SubmitField, TextField, LongTextField, BoolField } from 'uniforms-semantic';
 import { SimpleSchema2Bridge } from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
+import { demographicLevels } from '../../api/level/Levels';
+import MultiSelectField from '../components/form-fields/MultiSelectField';
+import PropTypes from 'prop-types';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Link } from 'react-router-dom';
 
 import { Developers } from '../../api/user/DeveloperCollection';
-import { developerUpdateMethod } from '../../api/user/DeveloperCollection.methods';
+import { Skills } from '../../api/skill/SkillCollection';
+import { Tools } from '../../api/tool/ToolCollection';
+import { Challenges } from '../../api/challenge/ChallengeCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 
+/** added challenges, skills, tools fields to the Developers schema **/
+const schema = new SimpleSchema({
+  username: { type: String },
+  slugID: { type: String },
+  firstName: { type: String },
+  lastName: { type: String },
+  demographicLevel: { type: String, allowedValues: demographicLevels, optional: true },
+  linkedIn: { type: String, optional: true },
+  gitHub: { type: String, optional: true },
+  website: { type: String, optional: true },
+  aboutMe: { type: String, optional: true },
+  userID: { type: SimpleSchema.RegEx.Id, optional: true },
+  lookingForTeam: { type: Boolean, optional: true },
+  isCompliant: { type: Boolean, optional: true },
+  challenges: { type: Array, optional: true },
+    'challenges.$': { type: String },
+  skills: { type: Array, optional: true },
+    'skills.$': { type: String },
+  tools: { type: Array, optional: true },
+    'tools.$': { type: String },
+})
+
 /**
- * A simple static component to render some text for the landing page.
+ * A simple edit page thats prefilled with any info about the developer.
  * @memberOf ui/pages
  */
 class EditProfile extends React.Component {
@@ -21,29 +51,75 @@ class EditProfile extends React.Component {
    */
   submit(data) {
     const { firstName, lastName, demographicLevel, lookingForTeam, challenges,
-      skills, tools, linkedIn, gitHub, website, aboutMe, _id } = data;
+      skills, tools, linkedIn, gitHub, website, aboutMe, isCompliant, _id } = data;
+
+    const challengesList = this.props.challenges;
+    let challengeIds = [];
+    const skillsList = this.props.skills;
+    let skillIds = [];
+    const toolsList = this.props.tools;
+    let toolIds = [];
+
+    for (let i = 0; i < challengesList.length; i++) {
+      for (let j = 0; j < challenges.length; j++) {
+        if (challengesList[i].title === challenges[j]) {
+          challengeIds.push(challengesList[i].slugID);
+        }
+      }
+    }
+
+    for (let i = 0; i < skillsList.length; i++) {
+      for (let j = 0; j < skills.length; j++) {
+        if (skillsList[i].name === skills[j]) {
+          skillIds.push(skillsList[i].slugID);
+        }
+      }
+    }
+
+    for (let i = 0; i < toolsList.length; i++) {
+      for (let j = 0; j < tools.length; j++) {
+        if (toolsList[i].name === tools[j]) {
+          toolIds.push(toolsList[i].slugID);
+        }
+      }
+    }
+
     const updateData = {
       id: _id,
       firstName,
       lastName,
       demographicLevel,
       lookingForTeam,
-      challenges,
-      skills,
-      tools,
+      challenges: challengeIds,
+      isCompliant,
+      skills: skillIds,
+      tools: toolIds,
       linkedIn,
       gitHub,
       website,
       aboutMe,
     };
-    developerUpdateMethod.call(updateData, (error) => (error ?
+    updateMethod.call({collectionName: Developers.getCollectionName() , updateData: updateData}, (error) => (error ?
       swal('Error', error.message, 'error') :
       swal('Success', 'Item updated successfully', 'success')));
   }
 
+  /** If the subscription(s) have been received, render the page, otherwise show a loading icon. */
   render() {
-    const formSchema = new SimpleSchema2Bridge(Developers.getSchema());
+    return (this.props.ready) ? this.renderPage() : <Loader active>Getting data</Loader>;
+  }
+
+  /** Render the page once subscriptions have been received. */
+  renderPage() {
+    const formSchema = new SimpleSchema2Bridge(schema);
     const dev = Developers.findOne();
+    dev.testtest = 'test';
+    console.log(dev);
+
+    const challengeList = _.map(this.props.challenges, 'title');
+    const skillList = _.map(this.props.skills, 'name');
+    const toolList = _.map(this.props.tools, 'name');
+
     return (
         <Grid stackable={true} textAlign='center' container>
 
@@ -52,7 +128,7 @@ class EditProfile extends React.Component {
               <h1>Edit Your Profile</h1>  
             </Grid.Column>
             <Grid.Column floated='right'>
-              <h1>back</h1>  
+              <Link to='/profile'>Cancel</Link>
             </Grid.Column>
           </Grid.Row>
 
@@ -64,6 +140,9 @@ class EditProfile extends React.Component {
                 <TextField name='linkedIn' placeholder='linkedin url...'/>
                 <TextField name='gitHub' placeholder='github url...'/>
                 <TextField name='website' placeholder='website url...'/>
+                <MultiSelectField name='challenges' allowedValues={challengeList} placeholder='Challenges' />
+                <MultiSelectField name='skills' allowedValues={skillList} placeholder='Skills' />
+                <MultiSelectField name='tools' allowedValues={toolList} placeholder='Tools' />
                 <LongTextField name='aboutMe' placeholder='a short bio about yourself...'/>
                 <SubmitField value='Submit'/>
                 <ErrorsField/>
@@ -71,60 +150,32 @@ class EditProfile extends React.Component {
             </AutoForm>
           </Grid.Row>
 
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              <Segment textAlign='left'>
-                <h1>First Name</h1>
-                <h1>Last Name</h1>
-              </Segment>
-              <Segment textAlign='left'>
-                <h5><Icon name='linkedin' size='large'/>LinkedIn</h5>
-                <p>optional</p>
-                <h5><Icon name='github' size='large'/>Github</h5>
-                <p>optional</p>
-                <h5><Icon name='computer' size='large'/>Website</h5>
-                <p>optional</p>
-              </Segment>
-              <Segment textAlign='left'>
-                <h1>About Me</h1>
-                <p>optional, 200 char</p>
-              </Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Segment textAlign='left'>
-                <h1>Skills</h1>
-                <h5>Experienced</h5>
-                <List horizontal>
-                  <List.Item>
-                    <Segment>
-                      Javascript
-                    </Segment>
-                  </List.Item>
-                </List>
-                <h5>Novice</h5>
-                <h5>Willing To Learn</h5>
-              </Segment>
-              <Segment textAlign='left'>
-                <h1>Tools</h1>
-                <h5>Experienced</h5>
-                <h5>Novice</h5>
-                <h5>Willing To Learn</h5>
-              </Segment>
-              <Segment textAlign='left'>
-                <h1>Challenges</h1>
-                <p>:P</p>
-              </Segment>
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Button color='green'>Save Changes</Button>
-            <Button>Cancel</Button>
-          </Grid.Row>
-
         </Grid>
     );
   }
 }
 
-export default EditProfile;
+EditProfile.propTypes = {
+  tools: PropTypes.array.isRequired,
+  skills: PropTypes.array.isRequired,
+  developer: PropTypes.array.isRequired,
+  challenges: PropTypes.array.isRequired,
+  ready: PropTypes.bool.isRequired,
+};
+
+//** withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker */
+export default withTracker(() => {
+  // Get access to documents.
+  const toolsSubscription = Tools.subscribe();
+  const skillsSubscription = Skills.subscribe();
+  const developersSubscription = Developers.subscribe();
+  const challengesSubscription = Challenges.subscribe();
+  return {
+    tools: Tools.find({}).fetch(),
+    skills: Skills.find({}).fetch(),
+    developer: Developers.find({}).fetch(),
+    challenges: Challenges.find({}).fetch(),
+    ready: toolsSubscription.ready() && skillsSubscription.ready() &&
+      developersSubscription.ready() && challengesSubscription.ready(),
+  };
+})(EditProfile);
