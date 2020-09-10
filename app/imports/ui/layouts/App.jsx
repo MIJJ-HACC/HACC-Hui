@@ -9,7 +9,11 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
+import CreateTeam from '../pages/CreateTeam';
 import AddStuff from '../pages/AddStuff';
+import AddChallenge from '../pages/AddChallenge';
+import AddSkill from '../pages/AddSkill';
+import AddTool from '../pages/AddTool';
 import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
@@ -17,6 +21,8 @@ import Signout from '../pages/Signout';
 import Profile from '../pages/Profile';
 import EditProfile from '../pages/EditProfile';
 import Participation from '../pages/Participation';
+import ConfigureHACC from '../pages/ConfigureHACC';
+import DeleteAccount from '../pages/DeleteAccount';
 import withAllSubscriptions from './AllSubscriptionsHOC';
 import { ROLE } from '../../api/role/Role';
 
@@ -38,9 +44,15 @@ class App extends React.Component {
               <ProtectedRoute path="/participation" component={Participation}/>
               <ProtectedRoute path="/list" component={ListStuff}/>
               <ProtectedRoute path="/add" component={AddStuff}/>
+              <ProtectedRoute path="/create" component={CreateTeam}/>
               <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
-              <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
+			        <ProtectedRoute path="/configureHACC" component={ConfigureHACC}/>
+              <ProtectedRoute path="/admin" component={ListStuffAdmin}/>
+			        <ProtectedRoute path="/addChallenge" component={AddChallenge}/>
+			        <ProtectedRoute path="/addSkill" component={AddSkill}/>
+			        <ProtectedRoute path="/addTool" component={AddTool}/>
               <ProtectedRoute path="/signout" component={Signout}/>
+              <ProtectedRoute path="/delete-account" component={DeleteAccount}/>
               <Route component={NotFound}/>
             </Switch>
             <Footer/>
@@ -85,7 +97,7 @@ const AdminProtectedRoute = ({ component: Component, ...rest }) => {
           {...rest}
           render={(props) => {
             const isLogged = Meteor.userId() !== null;
-            const isAdmin = Roles.userIsInRole(Meteor.userId(), ROLE.ADMIN);
+            const isAdmin = Roles.userIsInRole(Meteor.userId(), 'admin');
             return (isLogged && isAdmin) ?
                 (<WrappedComponent {...props} />) :
                 (<Redirect to={{ pathname: '/signin', state: { from: props.location } }}/>
