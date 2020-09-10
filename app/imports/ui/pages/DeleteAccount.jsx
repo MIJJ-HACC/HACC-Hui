@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import SimpleSchema from 'simpl-schema';
-import { Grid, Header, Segment, Button } from 'semantic-ui-react';
+import { Grid, Header, Segment, Button, Loader } from 'semantic-ui-react';
+import swal from 'sweetalert';
 import { AutoForm, ErrorsField, LongTextField, SelectField } from 'uniforms-semantic';
 import { SimpleSchema2Bridge } from 'uniforms-bridge-simple-schema-2';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -34,12 +35,23 @@ class DeleteAccount extends React.Component {
       typeData,
     };
     userInteractionDefineMethod.call(userInteraction);
-    removeItMethod.call({ collectionName: Developers.getCollectionName(), instance: this.props.doc._id });
-    this.props.history.push('/signout');
+    removeItMethod.call({ collectionName: Developers.getCollectionName(), instance: this.props.doc._id }, (error) => {
+      if (error) {
+        swal('Error', error.message, 'error');
+      } else {
+        swal('Success', 'Account deleted successfully.', 'success');
+        // eslint-disable-next-line react/prop-types
+        this.props.history.push('/signout', { some: 'state' });
+      }
+    });
   }
 
   /** Render the form. Use Uniforms: https://github.com/vazco/uniforms */
   render() {
+    return (this.props.ready) ? this.renderPage() : <Loader active>Getting data</Loader>;
+  }
+
+  renderPage() {
     const reasons = ['No challenge was interesting', 'Couldn\'t find a team I like being on', 'etc'];
     const schema = new SimpleSchema({
       reason: {
