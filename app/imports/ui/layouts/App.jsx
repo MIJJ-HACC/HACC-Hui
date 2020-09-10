@@ -18,6 +18,9 @@ import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signout from '../pages/Signout';
+import Profile from '../pages/Profile';
+import EditProfile from '../pages/EditProfile';
+import Participation from '../pages/Participation';
 import ConfigureHACC from '../pages/ConfigureHACC';
 import DeleteAccount from '../pages/DeleteAccount';
 import withAllSubscriptions from './AllSubscriptionsHOC';
@@ -36,15 +39,18 @@ class App extends React.Component {
             <Switch>
               <Route exact path="/" component={Landing}/>
               <Route path="/signin" component={Signin}/>
+              <ProtectedRoute path="/profile" component={Profile}/>
+              <ProtectedRoute path="/editprofile/:_id" component={EditProfile}/>
+              <ProtectedRoute path="/participation" component={Participation}/>
               <ProtectedRoute path="/list" component={ListStuff}/>
               <ProtectedRoute path="/add" component={AddStuff}/>
               <ProtectedRoute path="/create" component={CreateTeam}/>
               <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
-			  <ProtectedRoute path="/configureHACC" component={ConfigureHACC}/>
+			        <ProtectedRoute path="/configureHACC" component={ConfigureHACC}/>
               <ProtectedRoute path="/admin" component={ListStuffAdmin}/>
-			  <ProtectedRoute path="/addChallenge" component={AddChallenge}/>
-			  <ProtectedRoute path="/addSkill" component={AddSkill}/>
-			  <ProtectedRoute path="/addTool" component={AddTool}/>
+			        <ProtectedRoute path="/addChallenge" component={AddChallenge}/>
+			        <ProtectedRoute path="/addSkill" component={AddSkill}/>
+			        <ProtectedRoute path="/addTool" component={AddTool}/>
               <ProtectedRoute path="/signout" component={Signout}/>
               <ProtectedRoute path="/delete-account" component={DeleteAccount}/>
               <Route component={NotFound}/>
