@@ -166,9 +166,8 @@ class EditProfile extends React.Component {
                 <Segment>
                   <SelectField name='demographicLevel'/>
                   <BoolField name='lookingForTeam'/>
-                  <BoolField name='isCompliant'/>
-                  <TextField name='linkedIn' placeholder='linkedin url...'/>
-                  <TextField name='gitHub' placeholder='github url...'/>
+                  <TextField name='linkedIn' placeholder='linkedin url...' label='LinkedIn'/>
+                  <TextField name='gitHub' placeholder='github url...' label='Github'/>
                   <TextField name='website' placeholder='website url...'/>
                   <MultiSelectField name='challenges' allowedValues={challengeList} placeholder='Challenges'/>
                   <MultiSelectField name='skills' allowedValues={skillList} placeholder='Skills'/>
