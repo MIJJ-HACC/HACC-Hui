@@ -8,21 +8,90 @@ import { Grid, Image } from 'semantic-ui-react';
 class Landing extends React.Component {
   render() {
     return (
-        <Grid verticalAlign='middle' textAlign='center' container>
-
-          <Grid.Column width={12}>
-            <Image src="/images/HACC-Logo.png" size='massive'/>
-          </Grid.Column>
-
-          <Grid.Column width={8}>
-            <h1>Welcome to HACC 2020</h1>
-			<h3>About the HACC</h3>
-            <p>In 2015, Gov. David Ige conceived the idea of a hackathon that encouraged civic engagement with the local technology community in modernizing state functions and services for a more effective, efficient and open government. Another objective of the hackathon was to strengthen the pipeline of the IT workforce and expand the tech industry in our State. </p>
-			<p>What makes the Hawaii Annual Code Challenge (HACC) unique is that it breaks the mold of a traditional hackathon, which typically takes place over a single day or weekend. The HACC provides an expanded multi-week timeframe meant to encourage interaction between community teams and state department personnel, ultimately resulting in sustainable solutions that are appropriately matched with technologies and platforms in use or being considered by the state. Beginning at the HACC Kick Off, community participants form teams and select from a list of challenges. </p>
-			<p>The HACC generates proof-of-concepts by student, amateur and professional coders to benefit community and State agencies to support sustainability at the idea-phase level, feeding into Hawai’i’s vibrant innovation ecosystem to promote solutions for the state, community, professional development, local job creation and building local businesses.</p>
-            <p>HACC is nationally recognized with the State IT Innovation of the Year award by StateScoop, the leading government IT media company in the nation’s capital.</p>
-          </Grid.Column>
-
+        <Grid rows={'equal'}>
+          <Grid.Row style={{ margin: 50 }}>
+            <Grid.Column width={8} style={{
+              display: 'flex', flexDirection: 'column',
+              justifyContent: 'center', alignItems: 'center',
+            }}>
+              <b style={{
+                color: '#0B2C52', fontSize: 30, alignSelf: 'flex-start',
+                paddingLeft: 20, marginBottom: 15,
+              }}>Welcome to HACC-Hui</b>
+                  <p style={{ fontSize: 20, paddingLeft: 20, color: '#0B2C52' }}>
+                    Our goal is to simplify team formation and ongoing team management
+                    for the Hawaii Annual Code Challenge.
+                    <br />
+                    <br />
+                    Here you can create a new team or join an already made one.
+                      Our application can help you find the perfect team for you,
+                      or help you look for members that fit your team’s requirements.
+                  </p>
+              </Grid.Column>
+            <Grid.Column width={8} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Image centered size='medium' src="/images/hacc.png"/>
+              </Grid.Column>
+          </Grid.Row>
+          <Grid.Row style={{ backgroundColor: '#E5F0FE' }}>
+            <Grid.Column width={8} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+              <Image centered size='small' src="/images/profile8.png"/>
+              <b style={{ fontSize: 30, fontStyle: 'italic', margin: 15 }}>
+                Develop your profile
+              </b>
+              <p style={{ fontSize: 20, fontStyle: 'italic' }}>
+                Create your profile to participate in HACC
+              </p>
+            </Grid.Column>
+            <Grid.Column width={8} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+              <Image centered size='small' src="/images/team.png"/>
+              <b style={{ fontSize: 30, fontStyle: 'italic', margin: 15 }}>
+                Create a team
+              </b>
+              <p style={{ fontSize: 20, fontStyle: 'italic' }}>
+                Create your team to solve a challenge and win the HACC
+              </p>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row style={{ backgroundColor: '#E5F0FE' }}>
+            <Grid.Column width={8} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+              <Image centered size='small' src="/images/join.png"/>
+              <b style={{ fontSize: 30, fontStyle: 'italic', margin: 15 }}>
+                Join a team
+              </b>
+              <p style={{ fontSize: 20, fontStyle: 'italic' }}>
+                Find a team to join and tackle a challenge together
+              </p>
+            </Grid.Column>
+            <Grid.Column width={8} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+              <Image centered size='small' src="/images/slackicon.png"/>
+              <b style={{ fontSize: 30, fontStyle: 'italic', margin: 15 }}>
+                Utilize Slack
+              </b>
+              <p style={{ fontSize: 20, fontStyle: 'italic' }}>
+                Communicate with your team through Slack
+              </p>
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
     );
   }
