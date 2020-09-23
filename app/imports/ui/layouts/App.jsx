@@ -33,6 +33,11 @@ import TeamCreation from '../pages/developer/TeamCreation';
 import { ROUTES } from '../../startup/client/route-constants';
 import DeleteForm from '../pages/developer/DeleteForm';
 
+import DumpDatabase from '../pages/administrator/DumpDatabase';
+import EditProfilePage from '../pages/developer/EditProfilePage';
+import ListTeamsPage from '../pages/developer/ListTeamsPage';
+
+
 /**
  * Top-level layout component for this application. Called in imports/startup/client/startup.jsx.
  * @memberOf ui/layouts
