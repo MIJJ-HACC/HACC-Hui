@@ -9,11 +9,20 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
+// import CreateTeam from '../pages/CreateTeam';
 import AddStuff from '../pages/AddStuff';
+import AddChallenge from '../pages/AddChallenge';
+import AddSkill from '../pages/AddSkill';
+import AddTool from '../pages/AddTool';
 import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signout from '../pages/Signout';
+// import Profile from '../pages/Profile';
+// import EditProfile from '../pages/EditProfile';
+// import Participation from '../pages/Participation';
+import ConfigureHACC from '../pages/ConfigureHACC';
+// import DeleteAccount from '../pages/DeleteAccount';
 import withAllSubscriptions from './AllSubscriptionsHOC';
 import { ROLE } from '../../api/role/Role';
 import AgePage from '../pages/developer/AgePage';
@@ -23,10 +32,6 @@ import Dprofile from '../pages/developer/Dprofile';
 import TeamCreation from '../pages/developer/TeamCreation';
 import { ROUTES } from '../../startup/client/route-constants';
 import DeleteForm from '../pages/developer/DeleteForm';
-import ConfigureHACC from '../pages/administrator/ConfigureHACC';
-import AddChallenge from '../pages/administrator/AddChallenge';
-import AddSkill from '../pages/administrator/AddSkill';
-import AddTool from '../pages/administrator/AddTool';
 import DumpDatabase from '../pages/administrator/DumpDatabase';
 import EditProfilePage from '../pages/developer/EditProfilePage';
 import ListTeamsPage from '../pages/developer/ListTeamsPage';
@@ -86,7 +91,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
             const isLogged = Meteor.userId() !== null;
             return isLogged ?
                 (<WrappedComponent {...props} />) :
-                (<Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
+                (<Redirect to={{ pathname: ROUTES.SIGN_IN, state: { from: props.location } }} />
                 );
           }}
       />
@@ -109,7 +114,7 @@ const AdminProtectedRoute = ({ component: Component, ...rest }) => {
             const isAdmin = Roles.userIsInRole(Meteor.userId(), ROLE.ADMIN);
             return (isLogged && isAdmin) ?
                 (<WrappedComponent {...props} />) :
-                (<Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
+                (<Redirect to={{ pathname: ROUTES.SIGN_IN, state: { from: props.location } }} />
                 );
           }}
       />

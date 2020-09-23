@@ -3,6 +3,12 @@ import moment from 'moment';
 import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
+export const userInteractionTypes = {
+  deletedAccount: 'deletedAccount',
+  developerChangedSkills: 'changedSkills',
+  developerChangedTools: 'changedTools',
+};
+
 /**
  * UserInteractionCollection, colletion of user interactions with HACC-Hui application.
  * @extends api/base.BaseCollection
