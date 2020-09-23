@@ -2,16 +2,16 @@ import React from 'react';
 import { Grid, Segment, Header, Loader, Button } from 'semantic-ui-react';
 import { AutoForm, ErrorsField, TextField, LongTextField } from 'uniforms-semantic';
 import PropTypes from 'prop-types';
-import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { _ } from 'lodash';
+import { Meteor } from 'meteor/meteor';
 import swal from 'sweetalert';
 import { SimpleSchema2Bridge } from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
 import MultiSelectField from '../controllers/MultiSelectField';
 import RadioField from '../controllers/RadioField';
 import { Teams } from '../../api/team/TeamCollection';
-import { defineMethod } from '../../api/base/BaseCollection.methods';
+import { updateMethod } from '../../api/base/BaseCollection.methods';
 import { Skills } from '../../api/skill/SkillCollection';
 import { Tools } from '../../api/tool/ToolCollection';
 import { Challenges } from '../../api/challenge/ChallengeCollection';
@@ -21,7 +21,7 @@ import { Developers } from '../../api/user/DeveloperCollection';
  * Renders the Page for adding teams.
  * @memberOf ui/pages
  */
-class CreateTeam extends React.Component {
+class UpdateTeam extends React.Component {
 
   /** On submit, insert the data.
    * @param data {Object} the results from the form.
@@ -61,13 +61,14 @@ class CreateTeam extends React.Component {
         }
       }
     }
-    const data = { name, description, gitHubRepo, devPostPage, owner, openBoolean, challengesObject,
+    const id = this.props.team.slugID;
+    const data = { id, name, description, gitHubRepo, devPostPage, owner, openBoolean, challengesObject,
       skillsObject, toolsObject };
-    defineMethod.call({ collectionName: Teams.getCollectionName(), definitionData: data }, (error) => {
+    updateMethod.call({ collectionName: Teams.getCollectionName(), definitionData: data }, (error) => {
       if (error) {
         swal('Error', error.message, 'error');
       } else {
-        swal('Success', 'Team successfully created.', 'success');
+        swal('Success', 'Team successfully updated.', 'success');
         // eslint-disable-next-line react/prop-types
         this.props.history.push('/', { some: 'state' });
       }
@@ -118,30 +119,30 @@ class CreateTeam extends React.Component {
         <div>
           <Grid container centered>
             <Grid.Column>
-              <Header as="h2" textAlign="center">Create a Team</Header>
+              <Header as="h2" textAlign="center">Update a Team</Header>
               <AutoForm ref={ref => { fRef = ref; }}
                         schema={formSchema}
-                        onSubmit={data => this.submit(data)}>
+                        onSubmit={data => this.submit(data)}
+                        model={this.props.team}>
                 <Segment>
-                  <TextField name='name' placeholder={'No spaces, lower case letters and numbers only. ' +
-                    'Must be unique from other teams!'}/>
+                  <TextField className='disabled field' name='name' value={`${this.props.team.name}`}/>
                   <RadioField name='open'/>
                   <TextField name='gitHubRepo' placeholder={'optional'}/>
                   <TextField name='devPostPage' placeholder={'optional'}/>
                   <MultiSelectField name='challenges' placeholder={'Challenges'}
-                                    allowedValues={challengesArray} required/>
+                                    allowedValues={challengesArray}/>
                   <MultiSelectField name='skills' placeholder={'Skills'}
-                                    allowedValues={skillsArray} required/>
+                                    allowedValues={skillsArray}/>
                   <MultiSelectField name='tools' placeholder={'Tools'}
-                                    allowedValues={toolsArray} required/>
+                                    allowedValues={toolsArray}/>
                   <LongTextField name='description' placeholder={'About the team'}/>
                   <Button type='button' onClick={() => {
                     // eslint-disable-next-line no-undef
-                    if (window.confirm('Are you sure you wish to create this team?')) {
+                    if (window.confirm('Are you sure you wish to update this team?')) {
                       fRef.submit();
                     }
                   }}>
-                    Create Team
+                    Update Team
                   </Button>
                   <ErrorsField/>
                 </Segment>
@@ -153,18 +154,18 @@ class CreateTeam extends React.Component {
   }
 }
 
-CreateTeam.propTypes = {
+UpdateTeam.propTypes = {
   tools: PropTypes.array.isRequired,
   challenges: PropTypes.array.isRequired,
   skills: PropTypes.array.isRequired,
   developer: PropTypes.object.isRequired,
   history: PropTypes.any,
+  team: PropTypes.object.isRequired,
   ready: PropTypes.bool.isRequired,
 };
 
-export default withTracker(() => {
+export default withTracker(({ match }) => {
   const userID = Meteor.userId;
-  console.log(Developers.findDoc({ userID }));
   const sub0 = Challenges.subscribe();
   const sub1 = Skills.subscribe();
   const sub2 = Tools.subscribe();
@@ -174,6 +175,7 @@ export default withTracker(() => {
     skills: Skills.find({}).fetch(),
     tools: Tools.find({}).fetch(),
     developer: Developers.findDoc({ userID }),
+    team: Teams.findDoc(match.params._id),
     ready: sub0.ready() && sub1.ready() && sub2.ready() && sub3.ready(),
   };
-})(CreateTeam);
+})(UpdateTeam);

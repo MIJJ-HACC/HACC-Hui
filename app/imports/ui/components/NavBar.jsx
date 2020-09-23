@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { withRouter, NavLink } from 'react-router-dom';
-import { Menu, Dropdown, Header } from 'semantic-ui-react';
+import { Menu, Dropdown, Header, Loader } from 'semantic-ui-react';
+import _ from 'lodash';
 import { Roles } from 'meteor/alanning:roles';
+import { Teams } from '../../api/team/TeamCollection';
 import { ROLE } from '../../api/role/Role';
 import { ROUTES } from '../../startup/client/route-constants';
 
@@ -14,9 +16,21 @@ import { ROUTES } from '../../startup/client/route-constants';
  */
 class NavBar extends React.Component {
   render() {
+    return (this.props.ready) ? this.renderPage() : <Loader active>Getting data</Loader>;
+  }
+
+  renderPage() {
     const isAdmin = this.props.currentUser && Roles.userIsInRole(Meteor.userId(), ROLE.ADMIN);
     const isDeveloper = this.props.currentUser && Roles.userIsInRole(Meteor.userId(), ROLE.DEVELOPER);
     const menuStyle = { marginBottom: '10px' };
+    const ownedTeams = Teams.find({ owner: this.props.currentUser }).fetch();
+    console.log(ownedTeams);
+    console.log(this.props.currentUser);
+    console.log(Teams.count());
+    const mappedTeams = ownedTeams.map((team) => <Menu.Item as={NavLink} activeClassName="active" exact
+                                                            to={`${ROUTES.UPDATE_TEAM}/${team._id}`}
+                                                            key={`${ROUTES.UPDATE_TEAM}/${team._id}`}>
+      {`Update team ${team.name}`}</Menu.Item>);
     return (
         <Menu style={menuStyle} attached="top" borderless inverted>
           <Menu.Item as={NavLink} activeClassName="" exact to={ROUTES.LANDING}>
@@ -26,6 +40,9 @@ class NavBar extends React.Component {
               [<Menu.Item as={NavLink} activeClassName="active" exact
                           to={ROUTES.CREATE_TEAM} key='team-creation'>Create a Team</Menu.Item>,
               ]
+          ) : ''}
+          {isDeveloper ? (
+              mappedTeams
           ) : ''}
           {isAdmin ? (
               [
@@ -62,9 +79,13 @@ NavBar.propTypes = {
 };
 
 // withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-const NavBarContainer = withTracker(() => ({
-  currentUser: Meteor.user() ? Meteor.user().username : '',
-}))(NavBar);
+const NavBarContainer = withTracker(() => {
+  const sub = Teams.subscribe();
+  return {
+    currentUser: Meteor.user() ? Meteor.user().username : '',
+    ready: sub.ready(),
+  };
+})(NavBar);
 
 // Enable ReactRouter for this component. https://reacttraining.com/react-router/web/api/withRouter
 export default withRouter(NavBarContainer);

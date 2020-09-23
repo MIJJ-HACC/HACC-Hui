@@ -9,7 +9,6 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
-// import CreateTeam from '../pages/CreateTeam';
 import AddStuff from '../pages/AddStuff';
 import AddChallenge from '../pages/AddChallenge';
 import AddSkill from '../pages/AddSkill';
@@ -18,11 +17,8 @@ import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signout from '../pages/Signout';
-// import Profile from '../pages/Profile';
 // import EditProfile from '../pages/EditProfile';
-// import Participation from '../pages/Participation';
 import ConfigureHACC from '../pages/ConfigureHACC';
-// import DeleteAccount from '../pages/DeleteAccount';
 import withAllSubscriptions from './AllSubscriptionsHOC';
 import { ROLE } from '../../api/role/Role';
 import AgePage from '../pages/developer/AgePage';
@@ -32,6 +28,8 @@ import Dprofile from '../pages/developer/Dprofile';
 import TeamCreation from '../pages/developer/TeamCreation';
 import { ROUTES } from '../../startup/client/route-constants';
 import DeleteForm from '../pages/developer/DeleteForm';
+import UpdateTeam from '../pages/UpdateTeam';
+import CreateTeam from '../pages/CreateTeam';
 
 /**
  * Top-level layout component for this application. Called in imports/startup/client/startup.jsx.
@@ -50,7 +48,7 @@ class App extends React.Component {
               <ProtectedRoute path={ROUTES.PARTICIPATION} component={ParticipationForm} />
               <ProtectedRoute path={ROUTES.UNDERAGE_PARTICIPATION} component={UnderParticipationForm} />
               <ProtectedRoute path={ROUTES.CREATE_PROFILE} component={Dprofile} />
-              <ProtectedRoute path={ROUTES.CREATE_TEAM} component={TeamCreation} />
+              <ProtectedRoute path={ROUTES.CREATE_TEAM} component={CreateTeam} />
               <ProtectedRoute path={ROUTES.DELETE_ACCOUNT} component={DeleteForm} />
               <ProtectedRoute path="/list" component={ListStuff} />
               <ProtectedRoute path="/add" component={AddStuff} />
@@ -60,6 +58,7 @@ class App extends React.Component {
               <AdminProtectedRoute path={ROUTES.ADD_CHALLENGE} component={AddChallenge} />
               <AdminProtectedRoute path={ROUTES.ADD_SKILL} component={AddSkill} />
               <AdminProtectedRoute path={ROUTES.ADD_TOOL} component={AddTool} />
+              <ProtectedRoute path={`${ROUTES.UPDATE_TEAM}/:_id`} component={UpdateTeam} />
               <ProtectedRoute path={ROUTES.SIGN_OUT} component={Signout} />
               <Route component={NotFound} />
             </Switch>
