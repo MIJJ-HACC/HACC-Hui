@@ -51,6 +51,7 @@ class NavBar extends React.Component {
                   Teams</Menu.Item>,
                 <Menu.Item as={NavLink} activeClassName="active" exact to={ROUTES.INTERESTED_DEVELOPERS}
                            key='interested-developers'>Interested Developers</Menu.Item>,
+				  <Menu.Item as={NavLink} activeClassName="active" exact to={ROUTES.INTERESTED_DEVELOPERS} key='interested-developers'>Interested Developers</Menu.Item>,
               ]
           ) : ''}
           {isDeveloper ? (
