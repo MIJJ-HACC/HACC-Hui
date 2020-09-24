@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Header } from 'semantic-ui-react';
+import { Button, Grid, Header, Segment, List } from 'semantic-ui-react';
 //import { WantsToJoin } from '../../../api/team/WantToJoinCollection';
 import { Developers } from '../../../api/user/DeveloperCollection';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
@@ -29,26 +29,63 @@ class TeamListItem extends React.Component {
 
   render() {
     return (
-        <Grid.Row columns={5}>
-          <Grid.Column>
-            <Header as="h3">{this.props.team.name}</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Header as="h5">{this.props.team.description}</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Header as="h4">{this.props.teamChallenges.join(',')}</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Header as="h4">{this.props.teamSkills.join(',')}</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Header as="h4">{this.props.teamTools.join(',')}</Header>
-          </Grid.Column>
-          <Grid.Column>
-            <Button id={this.props.team._id} color="green" onClick={this.handleClick}>Request to Join</Button>
-          </Grid.Column>
-        </Grid.Row>
+      <div>
+      <Segment>
+        <Grid container>
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <Header as="h3">{this.props.team.name}</Header>
+            </Grid.Column>
+            <Grid.Column>
+              <Button id={this.props.team._id} color="green" onClick={this.handleClick}>Request to Join</Button>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <p>{this.props.team.description}</p>
+          </Grid.Row>
+
+          <Grid.Row textAlign='left'>
+            <Grid.Column>
+              <h4>Challenges</h4>
+              <List horizontal>
+                {this.props.teamChallenges.map((c) => <List.Item key={c}>
+                  <Segment>
+                    {c}
+                  </Segment>
+                  </List.Item>)}
+              </List>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row textAlign='left'>
+            <Grid.Column>
+              <h4>Skills</h4>
+              <List horizontal>
+                {this.props.teamSkills.map((s) => <List.Item key={s}>
+                  <Segment>
+                    {s}
+                  </Segment>
+                  </List.Item>)}
+              </List>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row textAlign='left'>
+            <Grid.Column>
+              <h4>Tools</h4>
+              <List horizontal>
+                {this.props.teamTools.map((t) => <List.Item key={t}>
+                  <Segment>
+                    {t}
+                  </Segment>
+                  </List.Item>)}
+              </List>
+            </Grid.Column>
+          </Grid.Row>
+
+        </Grid>
+      </Segment>
+      </div>
     );
   }
 }
