@@ -40,9 +40,9 @@ class ListTeamExampleWidget extends React.Component {
         // eslint-disable-next-line react/prop-types
       }
     });
-    if (window.confirm('Are you sure you wish to delete your account?')) {
-      fRef.submit();
-    }
+    //if (window.confirm('Are you sure you wish to delete your account?')) {
+      //fRef.submit();
+    //}
   }
 
   render() {
