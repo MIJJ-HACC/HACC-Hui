@@ -9,7 +9,6 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
-// import CreateTeam from '../pages/CreateTeam';
 import AddStuff from '../pages/AddStuff';
 import AddChallenge from '../pages/AddChallenge';
 import AddSkill from '../pages/AddSkill';
@@ -18,11 +17,7 @@ import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signout from '../pages/Signout';
-// import Profile from '../pages/Profile';
-// import EditProfile from '../pages/EditProfile';
-// import Participation from '../pages/Participation';
 import ConfigureHACC from '../pages/ConfigureHACC';
-// import DeleteAccount from '../pages/DeleteAccount';
 import withAllSubscriptions from './AllSubscriptionsHOC';
 import { ROLE } from '../../api/role/Role';
 import AgePage from '../pages/developer/AgePage';
@@ -33,6 +28,8 @@ import TeamCreation from '../pages/developer/TeamCreation';
 import TeamFinder from '../pages/developer/TeamFinder';
 import { ROUTES } from '../../startup/client/route-constants';
 import DeleteForm from '../pages/developer/DeleteForm';
+// import UpdateTeamPage from '../pages/developer/UpdateTeamPage';
+import UpdateTeamWidget from '../components/developer/UpdateTeamWidget';
 import DumpDatabase from '../pages/administrator/DumpDatabase';
 import EditProfilePage from '../pages/developer/EditProfilePage';
 import ListTeamsPage from '../pages/developer/ListTeamsPage';
@@ -68,6 +65,7 @@ class App extends React.Component {
               <AdminProtectedRoute path={ROUTES.ADD_CHALLENGE} component={AddChallenge} />
               <AdminProtectedRoute path={ROUTES.ADD_SKILL} component={AddSkill} />
               <AdminProtectedRoute path={ROUTES.ADD_TOOL} component={AddTool} />
+              <ProtectedRoute path={`${ROUTES.UPDATE_TEAM}/:_id`} component={UpdateTeamWidget} />
               <AdminProtectedRoute path={ROUTES.DUMP_DATABASE} component={DumpDatabase} />
               <ProtectedRoute path={ROUTES.SIGN_OUT} component={Signout} />
 			  <ProtectedRoute path={ROUTES.INTERESTED_DEVELOPERS} component={InterestedDevelopers} />
