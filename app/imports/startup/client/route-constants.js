@@ -19,5 +19,6 @@ export const ROUTES = {
   ADD_CHALLENGE: '/add-challenge',
   ADD_SKILL: '/add-skill',
   ADD_TOOL: '/add-tool',
+  FIND_TEAM: '/find-team',
   DUMP_DATABASE: '/dump-database',
 };
