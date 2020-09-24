@@ -40,10 +40,7 @@ class ListTeamExampleWidget extends React.Component {
         // eslint-disable-next-line react/prop-types
       }
     });
-    //if (window.confirm('Are you sure you wish to delete your account?')) {
-      //fRef.submit();
-    //}
-  }
+  };
 
   render() {
     const developer = Developers.findDoc({ userID: Meteor.userId() }).username;
