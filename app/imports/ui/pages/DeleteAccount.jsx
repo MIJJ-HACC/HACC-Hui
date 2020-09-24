@@ -35,13 +35,13 @@ class DeleteAccount extends React.Component {
     };
     userInteractionDefineMethod.call(userInteraction);
     removeItMethod.call({ collectionName: Developers.getCollectionName(), instance: this.props.doc._id }, (error) => {
-      if (error) {
-        swal('Error', error.message, 'error');
-      } else {
-        swal('Success', 'Account deleted successfully.', 'success');
-        // eslint-disable-next-line react/prop-types
-        this.props.history.push('/signout', { some: 'state' });
-      }
+        if (error) {
+          swal('Error', error.message, 'error');
+        } else {
+          swal('Success', 'Account deleted successfully.', 'success');
+          // eslint-disable-next-line react/prop-types
+          this.props.history.push('/signout', { some: 'state' });
+        }
     });
   }
 
