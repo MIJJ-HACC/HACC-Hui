@@ -32,7 +32,6 @@ const schema = new SimpleSchema({
     label: 'Availability',
   },
   name: String,
-  image: { type: String, optional: true },
   challenges: { type: Array, label: 'Challenges' },
   'challenges.$': { type: String },
   skills: { type: Array, label: 'Skills' },
@@ -40,8 +39,7 @@ const schema = new SimpleSchema({
   tools: { type: Array, label: 'Toolsets' },
   'tools.$': { type: String },
   description: String,
-  github: { type: String, optional: true },
-  devpostPage: { type: String, optional: true },
+  devPostPage: { type: String, optional: true, label: 'DevPost Page' },
 });
 
 /**
@@ -70,7 +68,7 @@ class TeamCreation extends React.Component {
     const owner = Developers.findDoc({ userID: Meteor.userId() }).username;
 
     const {
-      name, description, challenges, skills, tools, image,
+      name, description, challenges, skills, tools, devPostPage,
     } = formData;
     let { open } = formData;
     // console.log(challenges, skills, tools, open);
@@ -116,7 +114,7 @@ class TeamCreation extends React.Component {
       description,
       owner,
       open,
-      image,
+      devPostPage,
       challenges: challengesObj,
       skills: skillsObj,
       tools: toolsObj,
@@ -176,7 +174,6 @@ class TeamCreation extends React.Component {
                           inline
                       />
                     </Grid>
-                    <TextField name='image' placeholder={'Team Image URL'} />
                     <LongTextField name='description' />
                     <MultiSelectField name='challenges' placeholder={'Challenges'}
                                       allowedValues={challengeArr} required />
@@ -184,8 +181,7 @@ class TeamCreation extends React.Component {
                                       allowedValues={skillArr} required />
                     <MultiSelectField name='tools' placeholder={'Toolsets'}
                                       allowedValues={toolArr} required />
-                    <TextField name="github" />
-                    <TextField name="devpostPage" />
+                    <TextField name="devPostPage" />
                   </Grid.Column>
                 </Grid>
                 <div align='center'>

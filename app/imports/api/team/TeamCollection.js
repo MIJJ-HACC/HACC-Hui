@@ -79,8 +79,9 @@ class TeamCollection extends BaseSlugCollection {
    * @param skills {String[]} the new set of skills (optional).
    * @param tools {String[]} the new set of tools (optional).
    * @param developers {String[]} the new set of developers (optional).
+   * @param devPostPage {String} the new devPostPage of the team (optional).
    */
-  update(docID, { name, description, open, challenges, skills, tools, developers }) {
+  update(docID, { name, description, open, devPostPage, challenges, skills, tools, developers }) {
     this.assertDefined(docID);
     const updateData = {};
     if (name) {
@@ -91,6 +92,9 @@ class TeamCollection extends BaseSlugCollection {
     }
     if (_.isBoolean(open)) {
       updateData.open = open;
+    }
+    if (devPostPage) {
+      updateData.devPostPage = devPostPage;
     }
     this._collection.update(docID, { $set: updateData });
     const selector = { teamID: docID };

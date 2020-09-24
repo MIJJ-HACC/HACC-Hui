@@ -17,7 +17,6 @@ import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signout from '../pages/Signout';
-// import EditProfile from '../pages/EditProfile';
 import ConfigureHACC from '../pages/ConfigureHACC';
 import withAllSubscriptions from './AllSubscriptionsHOC';
 import { ROLE } from '../../api/role/Role';
@@ -28,8 +27,8 @@ import Dprofile from '../pages/developer/Dprofile';
 import TeamCreation from '../pages/developer/TeamCreation';
 import { ROUTES } from '../../startup/client/route-constants';
 import DeleteForm from '../pages/developer/DeleteForm';
-import UpdateTeam from '../pages/UpdateTeam';
-import CreateTeam from '../pages/CreateTeam';
+// import UpdateTeamPage from '../pages/developer/UpdateTeamPage';
+import UpdateTeamWidget from '../components/developer/UpdateTeamWidget';
 import DumpDatabase from '../pages/administrator/DumpDatabase';
 import EditProfilePage from '../pages/developer/EditProfilePage';
 import ListTeamsPage from '../pages/developer/ListTeamsPage';
@@ -63,7 +62,7 @@ class App extends React.Component {
               <AdminProtectedRoute path={ROUTES.ADD_CHALLENGE} component={AddChallenge} />
               <AdminProtectedRoute path={ROUTES.ADD_SKILL} component={AddSkill} />
               <AdminProtectedRoute path={ROUTES.ADD_TOOL} component={AddTool} />
-              <ProtectedRoute path={`${ROUTES.UPDATE_TEAM}/:_id`} component={UpdateTeam} />
+              <ProtectedRoute path={`${ROUTES.UPDATE_TEAM}/:_id`} component={UpdateTeamWidget} />
               <AdminProtectedRoute path={ROUTES.DUMP_DATABASE} component={DumpDatabase} />
               <ProtectedRoute path={ROUTES.SIGN_OUT} component={Signout} />
               <Route component={NotFound} />
