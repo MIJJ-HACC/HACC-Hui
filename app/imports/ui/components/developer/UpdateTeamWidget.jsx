@@ -106,7 +106,10 @@ class UpdateTeamWidget extends React.Component {
     });
     const developers = _.map(this.props.teamDevelopers, (developer) => {
       const d = Developers.findDoc(developer.developerID);
-      return d.username;
+      if (d._id !== this.props.team.owner) {
+        return d.username;
+      }
+      return;
     });
     const skills = _.map(this.props.teamSkills, (skill) => {
       const s = Skills.findDoc(skill.skillID);
@@ -120,6 +123,7 @@ class UpdateTeamWidget extends React.Component {
       name, description, gitHubRepo, devPostPage, open, challenges,
       developers, skills, tools,
     };
+    console.log(model);
     return model;
   }
 
@@ -155,7 +159,7 @@ class UpdateTeamWidget extends React.Component {
       tools: { type: Array, label: 'Toolsets' },
       'tools.$': { type: String },
       developers: { type: Array, label: 'Developers' },
-      'developers.$': { type: String },
+      'developers.$': { type: String, optional: true },
       description: String,
     });
     const formSchema = new SimpleSchema2Bridge(schema);
@@ -163,6 +167,7 @@ class UpdateTeamWidget extends React.Component {
     const skillsArray = _.map(this.props.allSkills, 'name');
     const toolsArray = _.map(this.props.allTools, 'name');
     const developersArray = _.map(this.props.allDevelopers, 'username');
+    developersArray.pop(this.props.developer.username);
     const model = this.buildTheModel();
     return (
         <div>
@@ -191,7 +196,7 @@ class UpdateTeamWidget extends React.Component {
                     <MultiSelectField name='skills' allowedValues={skillsArray} />
                     <MultiSelectField name='tools' allowedValues={toolsArray} />
                   </Form.Group>
-                  <MultiSelectField name='developers' placeholder={'Developers'}
+                  <MultiSelectField name='developers' placeholder={'Team Developers'}
                                     allowedValues={developersArray}/>
                   <LongTextField name='description' placeholder={'About the team'} />
                   <Button type='button' onClick={() => {
