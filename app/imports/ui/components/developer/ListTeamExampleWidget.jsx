@@ -66,7 +66,7 @@ class ListTeamExampleWidget extends React.Component {
           <Grid.Column>
             <Button id={this.props.team._id} color="green" onClick={this.handleClick}>Request to Join</Button>
             { isOwner ? (
-                [<Button color="red" id={this.props.team._id} content='Delete Team' onClick={this.handleClickDelete}>Delete Team</Button>]) : ''}
+                [<Button color="red" id={this.props.team._id} content='Delete' onClick={this.handleClickDelete}>Delete</Button>]) : ''}
           </Grid.Column>
         </Grid.Row>
     );
