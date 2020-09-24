@@ -9,11 +9,20 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
+// import CreateTeam from '../pages/CreateTeam';
 import AddStuff from '../pages/AddStuff';
+import AddChallenge from '../pages/AddChallenge';
+import AddSkill from '../pages/AddSkill';
+import AddTool from '../pages/AddTool';
 import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signout from '../pages/Signout';
+// import Profile from '../pages/Profile';
+// import EditProfile from '../pages/EditProfile';
+// import Participation from '../pages/Participation';
+import ConfigureHACC from '../pages/ConfigureHACC';
+// import DeleteAccount from '../pages/DeleteAccount';
 import withAllSubscriptions from './AllSubscriptionsHOC';
 import { ROLE } from '../../api/role/Role';
 import AgePage from '../pages/developer/AgePage';
@@ -24,10 +33,9 @@ import TeamCreation from '../pages/developer/TeamCreation';
 import TeamFinder from '../pages/developer/TeamFinder';
 import { ROUTES } from '../../startup/client/route-constants';
 import DeleteForm from '../pages/developer/DeleteForm';
-import ConfigureHACC from '../pages/administrator/ConfigureHACC';
-import AddChallenge from '../pages/administrator/AddChallenge';
-import AddSkill from '../pages/administrator/AddSkill';
-import AddTool from '../pages/administrator/AddTool';
+import DumpDatabase from '../pages/administrator/DumpDatabase';
+import EditProfilePage from '../pages/developer/EditProfilePage';
+import ListTeamsPage from '../pages/developer/ListTeamsPage';
 
 /**
  * Top-level layout component for this application. Called in imports/startup/client/startup.jsx.
@@ -46,8 +54,10 @@ class App extends React.Component {
               <ProtectedRoute path={ROUTES.PARTICIPATION} component={ParticipationForm} />
               <ProtectedRoute path={ROUTES.UNDERAGE_PARTICIPATION} component={UnderParticipationForm} />
               <ProtectedRoute path={ROUTES.CREATE_PROFILE} component={Dprofile} />
+              <ProtectedRoute path={ROUTES.EDIT_PROFILE} component={EditProfilePage} />
               <ProtectedRoute path={ROUTES.CREATE_TEAM} component={TeamCreation} />
               <ProtectedRoute path={ROUTES.FIND_TEAM} component={TeamFinder} />
+              <ProtectedRoute path={ROUTES.LIST_TEAMS} component={ListTeamsPage} />
               <ProtectedRoute path={ROUTES.DELETE_ACCOUNT} component={DeleteForm} />
               <ProtectedRoute path="/list" component={ListStuff} />
               <ProtectedRoute path="/add" component={AddStuff} />
@@ -57,6 +67,7 @@ class App extends React.Component {
               <AdminProtectedRoute path={ROUTES.ADD_CHALLENGE} component={AddChallenge} />
               <AdminProtectedRoute path={ROUTES.ADD_SKILL} component={AddSkill} />
               <AdminProtectedRoute path={ROUTES.ADD_TOOL} component={AddTool} />
+              <AdminProtectedRoute path={ROUTES.DUMP_DATABASE} component={DumpDatabase} />
               <ProtectedRoute path={ROUTES.SIGN_OUT} component={Signout} />
               <Route component={NotFound} />
             </Switch>
@@ -82,7 +93,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
             const isLogged = Meteor.userId() !== null;
             return isLogged ?
                 (<WrappedComponent {...props} />) :
-                (<Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
+                (<Redirect to={{ pathname: ROUTES.SIGN_IN, state: { from: props.location } }} />
                 );
           }}
       />
@@ -105,7 +116,7 @@ const AdminProtectedRoute = ({ component: Component, ...rest }) => {
             const isAdmin = Roles.userIsInRole(Meteor.userId(), ROLE.ADMIN);
             return (isLogged && isAdmin) ?
                 (<WrappedComponent {...props} />) :
-                (<Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
+                (<Redirect to={{ pathname: ROUTES.SIGN_IN, state: { from: props.location } }} />
                 );
           }}
       />
