@@ -7,11 +7,12 @@ import { Developers } from '../../../api/user/DeveloperCollection';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
 import { Teams } from '../../../api/team/TeamCollection';
 import { Slugs } from '../../../api/slug/SlugCollection';
+import { InterestedDevs } from '../../../api/team/InterestedDeveloperCollection';
 
 class ListTeamExampleWidget extends React.Component {
   handleClick(e, inst) {
     console.log(e, inst);
-    const collectionName = WantsToJoin.getCollectionName();
+	const collectionName = WantsToJoin.getCollectionName();
     const teamDoc = Teams.findDoc(inst.id);
     const team = Slugs.getNameFromID(teamDoc.slugID);
     const developer = Developers.findDoc({ userID: Meteor.userId() }).username;
@@ -19,8 +20,16 @@ class ListTeamExampleWidget extends React.Component {
       team,
       developer,
     };
+	console.log(e, inst);
     console.log(collectionName, definitionData);
     defineMethod.call({ collectionName, definitionData }, (error) => {
+      if (error) {
+        console.error('Failed to define', error);
+      }
+    });
+	const NewcollectionName = InterestedDevs.getCollectionName();
+    console.log(NewcollectionName, definitionData);
+    defineMethod.call({ collectionName: NewcollectionName, definitionData }, (error) => {
       if (error) {
         console.error('Failed to define', error);
       }

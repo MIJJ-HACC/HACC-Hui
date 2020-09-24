@@ -42,6 +42,10 @@
       "name": "DeveloperCollection",
       "contents": []
     },
+	{
+      "name": "InterestedDevsCollection",
+      "contents": []
+    },
     {
       "name": "InterestCollection",
       "contents": [

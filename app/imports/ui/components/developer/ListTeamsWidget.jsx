@@ -10,6 +10,7 @@ import { TeamSkills } from '../../../api/team/TeamSkillCollection';
 import { Skills } from '../../../api/skill/SkillCollection';
 import { TeamTools } from '../../../api/team/TeamToolCollection';
 import { Tools } from '../../../api/tool/ToolCollection';
+import { InterestedDevs } from '../../../api/team/InterestedDeveloperCollection';
 
 const getTeamChallenges = (team) => {
   const teamID = team._id;
