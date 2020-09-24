@@ -4,13 +4,12 @@ import PropTypes from 'prop-types';
 import { Button, Grid, Header } from 'semantic-ui-react';
 import { WantsToJoin } from '../../../api/team/WantToJoinCollection';
 import { Developers } from '../../../api/user/DeveloperCollection';
-import { defineMethod } from '../../../api/base/BaseCollection.methods';
+import { defineMethod, removeItMethod } from '../../../api/base/BaseCollection.methods';
 import { Teams } from '../../../api/team/TeamCollection';
 import { Slugs } from '../../../api/slug/SlugCollection';
 
-class ListTeamExampleWidget extends React.Component {
 
-  //This is the mechanism for the request button to join
+class ListTeamExampleWidget extends React.Component {
   handleClick(e, inst) {
     console.log(e, inst);
     const collectionName = WantsToJoin.getCollectionName();
@@ -29,26 +28,20 @@ class ListTeamExampleWidget extends React.Component {
     });
   }
 
+  handleClickDelete = () => {
+    const id = this.props.team._id;
+    removeItMethod.call({ collectionName: Teams.getCollectionName(), instance: id });
+  }
 
   render() {
-//    const owner = this.findDoc(docID).owner;
-    const user = Developers.findDoc({userID: Meteor.userId() }).slugID;
-    console.log(user);
-  //console.log(this.props.currentUser);
-   //const ownerSlug = Developers.findSlugByID(owner);
-   //console.log(ownerSlug)
-    // const isOwner = this.props.currentUser && ownerSlug;
+    const developer = Developers.findDoc({ userID: Meteor.userId() }).username;
+    const isOwner = (this.props.team.owner === Developers.findDoc({ userID: Meteor.userId() })._id);
 
     return (
-        <Grid.Row columns={6}>
+        <Grid.Row columns={5}>
           <Grid.Column>
-            <Header as="h3">{this.props.team.owner}</Header>
+            <Header as="h3">{this.props.team.name}</Header>
           </Grid.Column>
-
-          <Grid.Column>
-            <Header as="h3">{this.props.team.owner}</Header>
-          </Grid.Column>
-
           <Grid.Column>
             <Header as="h3">{this.props.teamChallenges.join(',')}</Header>
           </Grid.Column>
@@ -60,19 +53,8 @@ class ListTeamExampleWidget extends React.Component {
           </Grid.Column>
           <Grid.Column>
             <Button id={this.props.team._id} color="green" onClick={this.handleClick}>Request to Join</Button>
-
-              <Button type='button' onClick={() => {
-               // eslint-disable-next-line no-undef
-
-                  if (window.confirm('Are you sure you wish to delete your team?')) {
-                    fRef.submit();
-                  }
-
-              }} color='red'>
-                Delete Team
-              </Button>
-
-
+            { isOwner ? (
+                [<Button color="red" id={this.props.team._id} content='Delete Team' onClick={this.handleClickDelete}>Delete Team</Button>]) : ''}
           </Grid.Column>
         </Grid.Row>
     );
@@ -80,8 +62,8 @@ class ListTeamExampleWidget extends React.Component {
 }
 
 ListTeamExampleWidget.propTypes = {
-  developer: PropTypes.object,
   team: PropTypes.object,
+  teamDevelopers: PropTypes.object.isRequired,
   teamChallenges: PropTypes.arrayOf(
       PropTypes.string,
   ),
