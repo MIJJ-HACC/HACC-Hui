@@ -7,6 +7,7 @@ import { Developers } from '../../../api/user/DeveloperCollection';
 import { defineMethod, removeItMethod } from '../../../api/base/BaseCollection.methods';
 import { Teams } from '../../../api/team/TeamCollection';
 import { Slugs } from '../../../api/slug/SlugCollection';
+import swal from 'sweetalert';
 
 
 class ListTeamExampleWidget extends React.Component {
@@ -30,7 +31,18 @@ class ListTeamExampleWidget extends React.Component {
 
   handleClickDelete = () => {
     const id = this.props.team._id;
-    removeItMethod.call({ collectionName: Teams.getCollectionName(), instance: id });
+
+    removeItMethod.call({ collectionName: Teams.getCollectionName(), instance: id }, (error) => {
+      if (error) {
+        swal('Error', error.message, 'error');
+      } else {
+        swal('Success', 'Team deleted successfully.', 'success');
+        // eslint-disable-next-line react/prop-types
+      }
+    });
+    if (window.confirm('Are you sure you wish to delete your account?')) {
+      fRef.submit();
+    }
   }
 
   render() {
