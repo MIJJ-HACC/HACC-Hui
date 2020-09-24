@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Grid, Header, Segment, List } from 'semantic-ui-react';
-//import { WantsToJoin } from '../../../api/team/WantToJoinCollection';
+import { WantsToJoin } from '../../../api/team/WantToJoinCollection';
 import { Developers } from '../../../api/user/DeveloperCollection';
 import { defineMethod } from '../../../api/base/BaseCollection.methods';
 import { Teams } from '../../../api/team/TeamCollection';
