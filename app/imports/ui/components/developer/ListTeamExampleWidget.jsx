@@ -25,6 +25,29 @@ class ListTeamExampleWidget extends React.Component {
         console.error('Failed to define', error);
       }
     });
+	const NewcollectionName = InterestedDevs.getCollectionName();
+    console.log(NewcollectionName, definitionData);
+    defineMethod.call({ collectionName: NewcollectionName, definitionData }, (error) => {
+      if (error) {
+        console.error('Failed to define', error);
+      }
+    });
+  }
+
+  handleClickDelete = () => {
+    const id = this.props.team._id;
+
+    removeItMethod.call({ collectionName: Teams.getCollectionName(), instance: id }, (error) => {
+      if (error) {
+        swal('Error', error.message, 'error');
+      } else {
+        swal('Success', 'Team deleted successfully.', 'success');
+        // eslint-disable-next-line react/prop-types
+      }
+    });
+    if (window.confirm('Are you sure you wish to delete your team?')) {
+      fRef.submit();
+    }
   }
 
   render() {

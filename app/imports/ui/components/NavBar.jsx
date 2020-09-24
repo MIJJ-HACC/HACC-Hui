@@ -26,12 +26,17 @@ class NavBar extends React.Component {
       marginBottom: '10px',
       backgroundColor: '#5C93D1',
     };
-    const devDoc = Developers.findDoc({ userID: Meteor.userId() });
-    const ownedTeams = Teams.find({ owner: devDoc._id }).fetch();
-    const mappedTeams = ownedTeams.map((team) => <Dropdown.Item as={NavLink} activeClassName="active" exact
-                                                                to={`${ROUTES.UPDATE_TEAM}/${team._id}`}
-                                                                key={`${ROUTES.UPDATE_TEAM}/${team._id}`}>
-      {`Update team ${team.name}`}</Dropdown.Item>);
+    let devDoc = null;
+    let ownedTeams = null;
+    let mappedTeams = null;
+    if (this.props.currentUser !== '') {
+      devDoc = Developers.findDoc({ userID: Meteor.userId() });
+      ownedTeams = Teams.find({ owner: devDoc._id }).fetch();
+      mappedTeams = ownedTeams.map((team) => <Dropdown.Item as={NavLink} activeClassName="active" exact
+                                                            to={`${ROUTES.UPDATE_TEAM}/${team._id}`}
+                                                            key={`${ROUTES.UPDATE_TEAM}/${team._id}`}>
+        {`Update team ${team.name}`}</Dropdown.Item>);
+    }
     return (
         <Menu style={menuStyle} attached="top" borderless inverted>
           <Menu.Item as={NavLink} activeClassName="" exact to={ROUTES.LANDING}>
@@ -44,6 +49,13 @@ class NavBar extends React.Component {
                   Your Profile</Menu.Item>,
                 <Menu.Item as={NavLink} activeClassName="active" exact to={ROUTES.LIST_TEAMS} key='list-teams'>List the
                   Teams</Menu.Item>,
+                <Menu.Item as={NavLink} activeClassName="active" exact to={ROUTES.INTERESTED_DEVELOPERS}
+                           key='interested-developers'>Interested Developers</Menu.Item>,
+              ]
+          ) : ''}
+          {isDeveloper ? (
+              [<Menu.Item as={NavLink} activeClassName="active" exact
+                          to={ROUTES.FIND_TEAM} key='team-finder'>Team Finder</Menu.Item>,
               ]
           ) : ''}
           {isDeveloper ? (

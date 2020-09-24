@@ -65,6 +65,7 @@ class App extends React.Component {
               <ProtectedRoute path={`${ROUTES.UPDATE_TEAM}/:_id`} component={UpdateTeamWidget} />
               <AdminProtectedRoute path={ROUTES.DUMP_DATABASE} component={DumpDatabase} />
               <ProtectedRoute path={ROUTES.SIGN_OUT} component={Signout} />
+              <ProtectedRoute path={ROUTES.INTERESTED_DEVELOPERS} component={InterestedDevelopers} />
               <Route component={NotFound} />
             </Switch>
             <Footer />

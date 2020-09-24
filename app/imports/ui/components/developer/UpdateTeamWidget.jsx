@@ -41,7 +41,7 @@ class UpdateTeamWidget extends React.Component {
     const toolsObject = [];
     const developersArray = this.props.allDevelopers;
     const developersObject = [];
-    const { name, devPostPage, description, challenges, skills, tools, developers } = formData;
+    const { name, description, challenges, devPostPage, skills, tools, developers } = formData;
     let { open } = formData;
     if (open === 'Open') {
       open = true;
@@ -78,8 +78,8 @@ class UpdateTeamWidget extends React.Component {
     }
     const id = this.props.team._id;
     const collectionName = Teams.getCollectionName();
-    const updateData = { id, name, description, open, devPostPage, challengesObject,
-      skillsObject, toolsObject, developersObject };
+    const updateData = { id, name, description, open, devPostPage, challenges: challengesObject,
+      skills: skillsObject, tools: toolsObject, developers: developersObject };
     console.log(updateData);
     updateMethod.call({ collectionName, updateData }, (error) => {
       if (error) {
