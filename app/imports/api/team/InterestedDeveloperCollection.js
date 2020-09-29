@@ -4,7 +4,6 @@ import { Developers } from '../user/DeveloperCollection';
 import { Teams } from './TeamCollection';
 import { ROLE } from '../role/Role';
 
-
 /**
  * Collection of team-developer pairs for interested developers.
  * @extends api/base.BaseCollection
