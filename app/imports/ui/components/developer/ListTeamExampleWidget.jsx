@@ -9,6 +9,9 @@ import { Teams } from '../../../api/team/TeamCollection';
 import { Slugs } from '../../../api/slug/SlugCollection';
 import swal from 'sweetalert';
 import { InterestedDevs } from '../../../api/team/InterestedDeveloperCollection';
+import { ROUTES } from '../../../startup/client/route-constants';
+import { withRouter, NavLink } from 'react-router-dom';
+import { withTracker } from 'meteor/react-meteor-data';
 
 class ListTeamExampleWidget extends React.Component {
   handleClick(e, inst) {
@@ -85,7 +88,9 @@ class ListTeamExampleWidget extends React.Component {
             <Header as="h3">{this.props.teamTools.join(',')}</Header>
           </Grid.Column>
           <Grid.Column>
-            <Button id={this.props.team._id} color="green" onClick={this.handleClick}>Request to Join</Button>
+            { isOwner ? <Button id={this.props.team._id}
+                          color="green"
+                          as={NavLink} exact to={`${ROUTES.DIRECT_INVITE}/${this.props.team._id}`}>Direct Invite</Button> : ''}
             { isOwner ? (
                 [<Button color="red" id={this.props.team._id} content='Delete' onClick={this.handleClickDelete}>Delete</Button>]) : ''}
           </Grid.Column>

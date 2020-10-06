@@ -23,4 +23,5 @@ export const ROUTES = {
   UPDATE_TEAM: '/update-team',
   DUMP_DATABASE: '/dump-database',
   INTERESTED_DEVELOPERS: '/interested-developers',
+  DIRECT_INVITE: '/direct-invite',
 };
